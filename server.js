@@ -39,4 +39,19 @@ app.get('/businesses/search', (req, res) => {
     .catch(error => console.log(error))
 })
 
+app.get('/business/:id', (req, res) => {
+  const id = req.params.id;
+  axios({
+    method: 'get',
+    url: `${process.env.YELP_BUSINESS_ENDPOINT}/${id}`,
+    headers: {
+      Authorization: `Bearer ${process.env.YELP_API_KEY}`,
+      'content-type': 'application/json'
+    }
+  }).then(response => {
+    res.json(response.data)
+  })
+    .catch(error => console.log(error))
+})
+
 app.listen(PORT, () => console.log(`Server is listening on port ${PORT}!`));
