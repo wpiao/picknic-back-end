@@ -12,6 +12,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/yelp', (req, res) => {
+  // for landing page, use location=seattle
   axios({
     method: 'get',
     url: `${process.env.YELP_BUSINESS_ENDPOINT}/search?location=seattle`,
@@ -23,6 +24,19 @@ app.get('/yelp', (req, res) => {
     .catch(error => console.log(error))
 })
 
-// add routes here
+// handle search by location and keyword
+app.get('/businesses/search', (req, res) => {
+  const location = req.query.location;
+  const term = req.query.term;
+  axios({
+    method: 'get',
+    url: `${process.env.YELP_BUSINESS_ENDPOINT}/search?location=${location}&term=${term}`,
+    headers: {
+      Authorization: `Bearer ${process.env.YELP_API_KEY}`,
+      'content-type': 'application/json'
+    }
+  }).then(response => res.json(response.data.businesses))
+    .catch(error => console.log(error))
+})
 
 app.listen(PORT, () => console.log(`Server is listening on port ${PORT}!`));
