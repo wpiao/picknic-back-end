@@ -15,6 +15,7 @@ db.once('open', function () {
   console.log('mongodb is connected!');
 });
 
+app.use(express.json());
 app.use(cors());
 app.get('/', (req, res) => {
   res.send('Welcome to PICKNIC back end!');
@@ -63,4 +64,28 @@ app.get('/business/:id', (req, res) => {
     .catch(error => console.log(error))
 })
 
+// post route to add business to specific user
+app.post('/business', (req, res) => {
+  const user = req.body;
+  Users.find({ user: user.email }, (err, userData) => {
+    if (err) {
+      res.send(err);
+    } else if (userData.length < 1) {
+      // if the user not found, then save the whole data
+      const newUser = new Users({
+        email: user.email,
+        businesses: [user.business]
+      });
+      newUser.save()
+        .then(newUserData => {
+          res.json(newUserData);
+        })
+        .catch(err => {
+          res.status(500).send(err);
+        })
+    } else {
+      // if the user found, then only push the business in the businesses property
+    }
+  })
+})
 app.listen(PORT, () => console.log(`Server is listening on port ${PORT}!`));

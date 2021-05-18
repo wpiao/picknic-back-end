@@ -8,7 +8,7 @@ const businessSchema = new mongoose.Schema({
 });
 
 const userSchema = new mongoose.Schema({
-  name: String,
+  email: String,
   businesses: [businessSchema]
 });
 
