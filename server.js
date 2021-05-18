@@ -67,11 +67,12 @@ app.get('/business/:id', (req, res) => {
 // post route to add business to specific user
 app.post('/business', (req, res) => {
   const user = req.body;
-  Users.find({ user: user.email }, (err, userData) => {
+  Users.find({ email: user.email }, (err, userData) => {
     if (err) {
       res.send(err);
     } else if (userData.length < 1) {
       // if the user not found, then save the whole data
+      console.log(userData)
       const newUser = new Users({
         email: user.email,
         businesses: [user.business]
@@ -82,9 +83,18 @@ app.post('/business', (req, res) => {
         })
         .catch(err => {
           res.status(500).send(err);
-        })
+        });
     } else {
       // if the user found, then only push the business in the businesses property
+      const userInfo = userData[0];
+      userInfo.businesses.push(user.business);
+      userInfo.save()
+        .then(userInfo => {
+          res.json(userInfo);
+        })
+        .catch(err => {
+          res.status(500).send(err);
+        });
     }
   })
 })
