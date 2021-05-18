@@ -1,10 +1,19 @@
 const express = require('express');
 const cors = require('cors');
 const { default: axios } = require('axios');
+const mongoose = require('mongoose');
 require('dotenv').config();
+const Users = require('./models/Users.js');
 
 const app = express();
 const PORT = process.env.PORT || 5001;
+
+mongoose.connect('mongodb://localhost:27017/business', { useNewUrlParser: true, useUnifiedTopology: true });
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function () {
+  console.log('mongodb is connected!');
+});
 
 app.use(cors());
 app.get('/', (req, res) => {
