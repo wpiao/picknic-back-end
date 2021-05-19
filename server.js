@@ -65,7 +65,7 @@ app.get('/business/:id', (req, res) => {
 })
 
 // post route to add business to specific user
-app.post('/business', (req, res) => {
+app.post('/business/save', (req, res) => {
   const user = req.body;
   Users.find({ email: user.email }, (err, userData) => {
     if (err) {
