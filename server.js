@@ -22,20 +22,19 @@ app.get('/', (req, res) => {
 });
 
 // business profile GET
-app.get('/business/profile', (req, res) =>
-{
-  Users.find({email: req.query.email}, (error, data) => {
+app.get('/business/profile', (req, res) => {
+  Users.find({ email: req.query.email }, (error, data) => {
     if (error) {
       res.send(error);
     } else {
-      if (data.length === 0){
-        res.send([])
+      if (data.length === 0) {
+        res.send(data);
       } else {
-        res.send(data[0].businesses)
+        res.send(data[0].businesses);
       }
     }
   });
-}); 
+});
 
 app.get('/yelp', (req, res) => {
   // for landing page, use location=seattle
