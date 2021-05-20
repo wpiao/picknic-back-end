@@ -113,4 +113,33 @@ app.post('/business/save', (req, res) => {
     }
   })
 })
+
+// delete the business from a specific user
+app.delete('/business/:id', (req, res) => {
+  Users.find({ email: req.query.email }, (err, data) => {
+    console.log(req.params.id);
+    // error handling
+    if (err) {
+      res.send(err);
+    } else {
+      if (data.length === 0) {
+        // user not found
+        res.status(400).send(data)
+      } else {
+        // user found
+        const user = data[0];
+        // delete the requested business with the id
+        user.businesses = user.businesses.filter(business => business.id !== req.params.id);
+        // save the user
+        user.save()
+          .then(data => {
+            // console.log('data after delete', data);
+            res.json(data.businesses);
+          })
+          .catch(err => res.status(500).send(err));
+      }
+    }
+  })
+});
+
 app.listen(PORT, () => console.log(`Server is listening on port ${PORT}!`));
