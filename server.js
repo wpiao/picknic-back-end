@@ -21,6 +21,21 @@ app.get('/', (req, res) => {
   res.send('Welcome to PICKNIC back end!');
 });
 
+// business profile GET
+app.get('/business/profile', (req, res) => {
+  Users.find({ email: req.query.email }, (error, data) => {
+    if (error) {
+      res.send(error);
+    } else {
+      if (data.length === 0) {
+        res.send(data);
+      } else {
+        res.send(data[0].businesses);
+      }
+    }
+  });
+});
+
 app.get('/yelp', (req, res) => {
   // for landing page, use location=seattle
   axios({
